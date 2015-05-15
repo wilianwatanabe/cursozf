@@ -9,7 +9,6 @@ use Zend\Paginator\Adapter\ArrayAdapter;
 use Zend\Paginator\Zend\Paginator;
 use Zend\Paginator\Adapter\Zend\Paginator\Adapter;
 use Zend\View\Helper\Zend\View\Helper;
-use Zend\View\Helper\Zend\View\Helper;
 
 abstract class AbstractController extends AbstractActionController
 {
@@ -90,6 +89,8 @@ abstract class AbstractController extends AbstractActionController
             ));
         }
         
+        $this->flashMessenger()->clearMessages();
+        
         return new ViewModel(array('form' => $form));
     }
     
@@ -98,7 +99,89 @@ abstract class AbstractController extends AbstractActionController
      */
     public function editarAction()
     {
-        
+    	if (is_string($this->form))
+    	{
+    		$form = new $this->form;
+    	}
+    	else
+    	{
+    		$form = $this->form;
+    	}
+    	
+    	$request = $this->getRequest();
+    	$param = $this->params()->fromRoute('id', 0);
+    	
+    	$repository = $this->getEm()->getRepository($this->entity)->find($param);
+    	
+    	if ($repository)
+    	{
+    		
+    		$array = array();
+    		foreach ($repository->toArray() as $key => $value)
+    		{
+    			if ($value instanceof \DateTime)
+    				$array[$key] = $value->format('d/m/Y');
+    			else
+    				$array[$key] = $value;
+    		}
+    		
+    		$form->setData($array);
+    		
+	    	if ($request->isPost())
+	        {
+	            $form->setData($request->getPost());
+	            
+	            if ($form->isValid())
+	            {
+	                $service = $this->getServiceLocator()->get($this->service);
+	                
+	                $data = $request->getPost()->toArray();
+	                $data['id'] = (int) $param;
+	                
+	                if ($service->save($data))
+	                {
+	                    $this->flashMessenger()->addSuccessMessage('Atualizado com Sucesso');
+	                }else{
+	                    $this->flashMessenger()->addErrorMessage('Não foi possivel atualizat! Tente mais tarde.');
+	                }
+	                
+	                return $this->redirect()->toRoute($this->route, array('controller' => $this->controller));
+	            }
+	        }
+    	}else {
+    		$this->flashMessenger()->addInfoMessage('Registro não foi encontrado!');
+    		return $this->redirect()->toRoute($this->route, array('controller' => $this->controller));
+    	}
+    	
+    	if ($this->flashMessenger()->hasSuccessMessages())
+    	{
+    		return new ViewModel(array('form' => $form,
+    				'success' => $this->flashMessenger()->getSuccessMessages(),
+    				'id' => $param
+    		));
+    	}
+    	
+    	if ($this->flashMessenger()->hasErrorMessages())
+    	{
+    		return new ViewModel(array('form' => $form,
+    				'error' => $this->flashMessenger()->getErrorMessages(),
+    				'id' => $param 
+    		));
+    	}
+    	
+    	if ($this->flashMessenger()->hasInfoMessages())
+    	{
+    		return new ViewModel(array('form' => $form,
+    				'warning' => $this->flashMessenger()->getInfoMessages(),
+    				'id' => $param
+    		));
+    	}
+    	
+    	$this->flashMessenger()->clearMessages();
+    	
+    	return new ViewModel(array('form' => $form,
+    							   'id' => $param
+    	));
     }
     
     /**
@@ -106,7 +189,15 @@ abstract class AbstractController extends AbstractActionController
      */
     public function excluirAction()
     {
+        $service = $this->getServiceLocator()->get($this->service);
+        $id = $this->params()->fromRoute('id', 0);
         
+        if ($service->remove(array('id' => $id)))
+        	$this->flashMessenger()->addSuccessMessage('Registro deletado com sucesso');
+        else
+        	$this->flashMessenger()->addErrorMessage('Não foi possivel deletar o registro');
+        
+        return $this->redirect()->toRoute($this->route, array('controller' => $this->controller));
     }
     
     /**
