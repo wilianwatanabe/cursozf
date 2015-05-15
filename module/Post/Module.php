@@ -1,9 +1,9 @@
 <?php
-namespace Categoria;
+namespace Post;
 
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
-use Categoria\Service\CategoriaService;
+use Post\Service\PostService;
 
 class Module
 {
@@ -34,8 +34,8 @@ class Module
     {
         return array(
             'factories' => array(
-                'Categoria\Service\CategoriaService' => function($em){
-                    return new CategoriaService($em->get('Doctrine\ORM\EntityManager'));
+                'Post\Service\PostService' => function($em){
+                    return new PostService($em->get('Doctrine\ORM\EntityManager'));
                 }
             )
         );

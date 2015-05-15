@@ -2,13 +2,10 @@
 namespace Base\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Helper\ViewModel;
+use Zend\View\Model\ViewModel;
 
 use Zend\Paginator\Paginator;
 use Zend\Paginator\Adapter\ArrayAdapter;
-use Zend\Paginator\Zend\Paginator;
-use Zend\Paginator\Adapter\Zend\Paginator\Adapter;
-use Zend\View\Helper\Zend\View\Helper;
 
 abstract class AbstractController extends AbstractActionController
 {
@@ -34,6 +31,22 @@ abstract class AbstractController extends AbstractActionController
         $paginator = new Paginator(new ArrayAdapter($list));
         $paginator->setCurrentPageNumber($page)
                   ->setDefaultItemCountPerPage(10);
+        
+        if ($this->flashMessenger()->hasSuccessMessages())
+        {
+            return new ViewModel(array('data' => $paginator,
+                                       'page' => $page,
+                                       'success' => $this->flashMessenger()->getSuccessMessages()
+            ));
+        }
+        
+        if ($this->flashMessenger()->hasErrorMessages())
+        {
+            return new ViewModel(array('data' => $paginator,
+                                       'page' => $page,
+                                       'error' => $this->flashMessenger()->getErrorMessages()
+            ));
+        }
         
         return new ViewModel(array('data' => $paginator,
                                    'page' => $page
@@ -71,7 +84,7 @@ abstract class AbstractController extends AbstractActionController
                     $this->flashMessenger()->addErrorMessage('Não foi possivel cadastrar! Tente mais tarde.');
                 }
                 
-                return $this->redirect()->toRoute($this->route, array('controller' => $this->controller));
+                return $this->redirect()->toRoute($this->route, array('controller' => $this->controller, 'action' => 'inserir'));
             }
         }
         
@@ -145,12 +158,16 @@ abstract class AbstractController extends AbstractActionController
 	                    $this->flashMessenger()->addErrorMessage('Não foi possivel atualizat! Tente mais tarde.');
 	                }
 	                
-	                return $this->redirect()->toRoute($this->route, array('controller' => $this->controller));
+	                return $this->redirect()
+	                ->toRoute($this->route, array('controller' => $this->controller,
+                        	                      'action' => 'editar',
+                        	                      'id' => $param
+	                ));
 	            }
 	        }
     	}else {
     		$this->flashMessenger()->addInfoMessage('Registro não foi encontrado!');
-    		return $this->redirect()->toRoute($this->route, array('controller' => $this->controller));
+    		return $this->redirect()->toRoute($this->route, array('controller' => $this->controller, 'action' => 'editar'));
     	}
     	
     	if ($this->flashMessenger()->hasSuccessMessages())
@@ -197,7 +214,7 @@ abstract class AbstractController extends AbstractActionController
         else
         	$this->flashMessenger()->addErrorMessage('Não foi possivel deletar o registro');
         
-        return $this->redirect()->toRoute($this->route, array('controller' => $this->controller));
+        return $this->redirect()->toRoute($this->route, array('controller' => $this->controller, ));
     }
     
     /**

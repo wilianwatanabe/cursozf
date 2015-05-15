@@ -16,7 +16,7 @@ class AbstractService
     }
     
     public function save(Array $data = array())
-    {
+    {      
         if (isset($data['id']))
         {
             $entity = $this->em->getReference($this->entity, $data['id']);

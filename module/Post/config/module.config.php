@@ -1,15 +1,15 @@
 <?php
-namespace Categoria;
+namespace Post;
 
 return array(
     'router' => array(
         'routes' => array(
-            'categoria' => array(
+            'post' => array(
                 'type' => 'Zend\Mvc\Router\Http\Literal',
                 'options' => array(
-                    'route'    => '/categoria',
+                    'route'    => '/post',
                     'defaults' => array(
-                        'controller' => 'Categoria\Controller\Index',
+                        'controller' => 'Post\Controller\Index',
                         'action'     => 'index',
                     ),
                 ),
@@ -36,7 +36,7 @@ return array(
     ),
     'controllers' => array(
         'invokables' => array(
-            'Categoria\Controller\Index' => 'Categoria\Controller\IndexController'
+            'Post\Controller\Index' => 'Post\Controller\IndexController'
         ),
     ),
     'view_manager' => array(

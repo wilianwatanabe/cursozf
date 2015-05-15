@@ -1,14 +1,20 @@
 <?php
 namespace Categoria\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
+use Base\Controller\AbstractController;
 use Zend\View\Model\ViewModel;
-use Zend\View\Model\Zend\View\Model;
 
-class IndexController extends AbstractActionController
+
+class IndexController extends AbstractController
 {
-	public function indexAction()
+	public function __construct()
 	{
-		return new ViewModel();
+	    $this->form = 'Categoria\Form\CategoryForm';
+	    $this->controller = 'categoria';
+	    $this->route = 'categoria/default';
+	    $this->service = 'Categoria\Service\CategoriaService';
+	    $this->entity = 'Categoria\Entity\Category';
+	    
 	}
+
 }

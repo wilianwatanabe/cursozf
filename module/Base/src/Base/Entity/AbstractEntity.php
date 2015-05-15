@@ -5,7 +5,7 @@ use Zend\Stdlib\Hydrator\ClassMethods;
 
 abstract class AbstractEntity
 {
-    public function __contruct(Array $options = array())
+    public function __construct(Array $options = array())
     {
         $hydrator = new ClassMethods();
         $hydrator->hydrate($options, $this);
