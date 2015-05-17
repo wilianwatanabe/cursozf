@@ -1,6 +1,5 @@
 <?php
 namespace Post;
-
 return array(
     'router' => array(
         'routes' => array(
@@ -13,7 +12,6 @@ return array(
                         'action'     => 'index',
                     ),
                 ),
-                
                 'may_terminate' => true,
                 'child_routes' => array(
                     'default' => array(
@@ -22,16 +20,29 @@ return array(
                             'route'    => '[/:action[/:id]]',
                             'constraints' => array(
                                 'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-                                'id' => '\d+'
+                                'id'         => '\d+'
                             ),
                             'defaults' => array(
                             ),
                         ),
                     ),
+                		
+                		'paginator' => array(
+                				'type'    => 'Segment',
+                				'options' => array(
+                						'route'    => '[/:page[/:page]]',
+                						'constraints' => array(
+                								'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                								'id' => '\d+'
+                						),
+                						'defaults' => array(
+                								'action' => 'index',
+                								'page'   => 1
+                						),
+                				),
+                		),
                 ),
-                
             ),
-               
         ),
     ),
     'controllers' => array(

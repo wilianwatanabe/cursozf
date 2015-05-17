@@ -41,8 +41,6 @@ if ($this->error)
     <p>Nenhum registro encontrado!</p>
     <?php endif;?>
     </tbody>
-
-
-
-
 </table>
+
+<?php echo $this->paginationControl($this->data, 'Sliding', 'partials/paginator', array('route' => 'categoria/paginator'))?>

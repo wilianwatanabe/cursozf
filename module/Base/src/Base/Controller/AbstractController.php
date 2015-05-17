@@ -15,6 +15,7 @@ abstract class AbstractController extends AbstractActionController
     protected $route;
     protected $service;
     protected $form;
+    protected $itemCountPerPage = 2;
     
     abstract function __construct();
     
@@ -30,7 +31,7 @@ abstract class AbstractController extends AbstractActionController
         
         $paginator = new Paginator(new ArrayAdapter($list));
         $paginator->setCurrentPageNumber($page)
-                  ->setDefaultItemCountPerPage(10);
+                  ->setDefaultItemCountPerPage($this->itemCountPerPage);
         
         if ($this->flashMessenger()->hasSuccessMessages())
         {

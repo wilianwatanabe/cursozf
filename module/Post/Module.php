@@ -3,6 +3,7 @@ namespace Post;
 
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
+use Post\Form\PostForm;
 use Post\Service\PostService;
 
 class Module
@@ -36,6 +37,9 @@ class Module
             'factories' => array(
                 'Post\Service\PostService' => function($em){
                     return new PostService($em->get('Doctrine\ORM\EntityManager'));
+                },
+                'Post\Form\PostForm' => function($em){
+                	return new PostForm($em->get('Doctrine\ORM\EntityManager'));
                 }
             )
         );

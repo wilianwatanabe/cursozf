@@ -49,7 +49,6 @@ class Post extends AbstractEntity
     /**
      * @var \DateTime
      *
-     * @ORM\PrePersist
      * @ORM\Column(name="cadastro", type="datetime", nullable=false)
      */
     private $cadastro;
@@ -57,7 +56,6 @@ class Post extends AbstractEntity
     /**
      * @var \DateTime
      *
-     * @ORM\PosUpdate
      * @ORM\Column(name="alterado", type="datetime", nullable=true)
      */
     private $alterado;
@@ -67,12 +65,12 @@ class Post extends AbstractEntity
      *
      * @ORM\Column(name="ativo", type="boolean", nullable=true)
      */
-    private $ativo = 0;
+    private $ativo;
 
     /**
-     * @var \Post\Entity\Category
+     * @var \Categoria\Entity\Category
      *
-     * @ORM\ManyToOne(targetEntity="Post\Entity\Category")
+     * @ORM\ManyToOne(targetEntity="Categoria\Entity\Category")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="category", referencedColumnName="id")
      * })
@@ -160,19 +158,19 @@ class Post extends AbstractEntity
         return $this->texto;
     }
 
+
     /**
      * Set cadastro
      *
      * @param \DateTime $cadastro
+     * @ORM\PrePersist
      * @return Post
      */
-    public function setCadastro($cadastro)
+    public function setCadastro()
     {
-        $this->cadastro = $cadastro;
-    
+        $this->cadastro = new \DateTime('now');
         return $this;
     }
-
     /**
      * Get cadastro
      *
@@ -182,20 +180,18 @@ class Post extends AbstractEntity
     {
         return $this->cadastro;
     }
-
     /**
      * Set alterado
      *
      * @param \DateTime $alterado
+     * @ORM\PreUpdate
      * @return Post
      */
-    public function setAlterado($alterado)
+    public function setAlterado()
     {
-        $this->alterado = $alterado;
-    
+        $this->alterado = new \DateTime('now');
         return $this;
     }
-
     /**
      * Get alterado
      *
@@ -205,7 +201,6 @@ class Post extends AbstractEntity
     {
         return $this->alterado;
     }
-
     /**
      * Set ativo
      *
@@ -232,7 +227,7 @@ class Post extends AbstractEntity
     /**
      * Set category
      *
-     * @param \Post\Entity\Category $category
+     * @param \Categoria\Entity\Category $category
      * @return Post
      */
     public function setCategory(\Categoria\Entity\Category $category = null)
@@ -245,7 +240,7 @@ class Post extends AbstractEntity
     /**
      * Get category
      *
-     * @return \Post\Entity\Category 
+     * @return \Categoria\Entity\Category 
      */
     public function getCategory()
     {
