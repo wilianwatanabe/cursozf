@@ -15,7 +15,7 @@ abstract class AbstractController extends AbstractActionController
     protected $route;
     protected $service;
     protected $form;
-    protected $itemCountPerPage = 2;
+    protected $itemCountPerPage = 5;
     
     abstract function __construct();
     
