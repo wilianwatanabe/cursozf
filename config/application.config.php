@@ -6,7 +6,7 @@ return array(
         'DoctrineORMModule',
         'Base',
     	'Categoria',
-        'Post'
+        'Post',
     ),
 
     // These are various options for the listeners attached to the ModuleManager
